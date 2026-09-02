@@ -1,0 +1,49 @@
+<div class="auth-wrapper">
+  <div class="auth-overlay"></div>
+  <div class="auth-card">
+    <div class="brand">
+      <i class="fas fa-bus-alt"></i>
+      <h1>SwiftBus</h1>
+      <p>Your journey starts here</p>
+    </div>
+
+    <h2>Welcome Back</h2>
+
+    <div class="alert alert-danger" *ngIf="error">
+      <i class="fas fa-exclamation-circle me-2"></i>{{ error }}
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="form-group">
+        <label><i class="fas fa-envelope"></i> Email</label>
+        <input type="email" formControlName="email" placeholder="Enter your email"
+          [class.is-invalid]="form.get('email')?.invalid && form.get('email')?.touched" />
+        <div class="invalid-feedback" *ngIf="form.get('email')?.invalid && form.get('email')?.touched">
+          Valid email is required.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label><i class="fas fa-lock"></i> Password</label>
+        <div class="input-icon-right">
+          <input [type]="showPassword ? 'text' : 'password'" formControlName="password" placeholder="Enter your password"
+            [class.is-invalid]="form.get('password')?.invalid && form.get('password')?.touched" />
+          <i class="fas" [class.fa-eye]="!showPassword" [class.fa-eye-slash]="showPassword"
+            (click)="showPassword = !showPassword"></i>
+        </div>
+        <div class="invalid-feedback" *ngIf="form.get('password')?.invalid && form.get('password')?.touched">
+          Password is required.
+        </div>
+      </div>
+
+      <button type="submit" class="btn-primary-full" [disabled]="loading">
+        <span *ngIf="!loading"><i class="fas fa-sign-in-alt me-2"></i>Login</span>
+        <span *ngIf="loading"><i class="fas fa-spinner fa-spin me-2"></i>Logging in...</span>
+      </button>
+    </form>
+
+    <p class="auth-footer">
+      Don't have an account? <a routerLink="/register">Register here</a>
+    </p>
+  </div>
+</div>

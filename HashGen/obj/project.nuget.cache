@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "Qm3mGuo6eQY=",
+  "success": true,
+  "projectFilePath": "c:\\Users\\kasubhas\\Documents\\Bus Booking\\HashGen\\HashGen.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\kasubhas\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}

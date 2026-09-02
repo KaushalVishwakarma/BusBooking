@@ -1,0 +1,111 @@
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-brand"><i class="fas fa-bus-alt"></i><span>SwiftBus</span></div>
+    <nav class="sidebar-nav">
+      <a routerLink="/admin/dashboard" routerLinkActive="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+      <a routerLink="/admin/buses" routerLinkActive="active"><i class="fas fa-bus"></i> Manage Buses</a>
+      <a routerLink="/admin/routes" routerLinkActive="active"><i class="fas fa-route"></i> Manage Routes</a>
+      <a routerLink="/admin/schedules" routerLinkActive="active"><i class="fas fa-calendar-alt"></i> Schedules</a>
+      <a routerLink="/admin/bookings" routerLinkActive="active"><i class="fas fa-ticket-alt"></i> All Bookings</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <div class="avatar">A</div>
+        <div><div class="name">{{ user?.fullName }}</div><div class="role">Administrator</div></div>
+      </div>
+      <button (click)="logout()"><i class="fas fa-sign-out-alt me-2"></i>Logout</button>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <div class="page-header">
+      <h2><i class="fas fa-bus me-2"></i>Manage Buses</h2>
+      <p>Add and manage your bus fleet</p>
+    </div>
+
+    <div class="data-card">
+      <div class="card-header">
+        <h3>All Buses ({{ buses.length }})</h3>
+        <button class="btn btn-primary btn-sm" (click)="openAdd()">
+          <i class="fas fa-plus"></i> Add Bus
+        </button>
+      </div>
+      <div class="card-body">
+        <div *ngIf="loading" class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>Loading...</p></div>
+        <div *ngIf="!loading && buses.length === 0" class="empty-state">
+          <i class="fas fa-bus"></i><p>No buses added yet.</p>
+        </div>
+        <div class="table-responsive" *ngIf="!loading && buses.length > 0">
+          <table>
+            <thead>
+              <tr><th>Bus Number</th><th>Bus Name</th><th>Type</th><th>Total Seats</th><th>Status</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let b of buses">
+                <td><strong>{{ b.busNumber }}</strong></td>
+                <td>{{ b.busName }}</td>
+                <td><span class="badge scheduled">{{ b.busType }}</span></td>
+                <td>{{ b.totalSeats }}</td>
+                <td>
+                  <span class="badge" [class]="b.isActive ? 'confirmed' : 'cancelled'">
+                    {{ b.isActive ? 'Active' : 'Inactive' }}
+                  </span>
+                </td>
+                <td>
+                  <button class="btn btn-danger btn-sm" *ngIf="b.isActive" (click)="deactivate(b.busId)">
+                    <i class="fas fa-ban"></i> Deactivate
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Add Bus Modal -->
+<div class="modal-overlay" *ngIf="showModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3><i class="fas fa-bus me-2"></i>Add New Bus</h3>
+      <button (click)="showModal = false"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="alert alert-danger" *ngIf="errorMessage">{{ errorMessage }}</div>
+      <div class="form-group">
+        <label>Bus Number</label>
+        <input type="text" [(ngModel)]="form.busNumber" placeholder="e.g. MH01AB1234" />
+      </div>
+      <div class="form-group">
+        <label>Bus Name</label>
+        <input type="text" [(ngModel)]="form.busName" placeholder="e.g. Shivneri Express" />
+      </div>
+      <div class="form-group">
+        <label>Bus Type</label>
+        <select [(ngModel)]="form.busType" (ngModelChange)="onTypeChange()">
+          <option>Seater</option>
+          <option>Sleeper</option>
+          <option>Semi-Sleeper</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Total Seats</label>
+        <input type="number" [(ngModel)]="form.totalSeats" min="4" [step]="isSleeper ? 2 : 4" />
+        <small style="color:var(--text-muted);font-size:0.8rem;margin-top:4px;display:block">
+          <i class="fas fa-info-circle me-1"></i>
+          {{ isSleeper ? 'Multiple of 4 — 2 berths per row (L, R) × 50% Lower + 50% Upper deck' : 'Multiple of 4 — 4 seats per row (A, B | aisle | C, D)' }}
+        </small>
+      </div>
+
+
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" (click)="showModal = false">Cancel</button>
+      <button class="btn btn-primary" (click)="save()" [disabled]="saving">
+        <i class="fas fa-save me-1"></i>{{ saving ? 'Saving...' : 'Save' }}
+      </button>
+    </div>
+  </div>
+</div>

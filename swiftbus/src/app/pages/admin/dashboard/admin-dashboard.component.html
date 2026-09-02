@@ -1,0 +1,95 @@
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-brand"><i class="fas fa-bus-alt"></i><span>SwiftBus</span></div>
+    <nav class="sidebar-nav">
+      <a routerLink="/admin/dashboard" routerLinkActive="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+      <a routerLink="/admin/buses" routerLinkActive="active"><i class="fas fa-bus"></i> Manage Buses</a>
+      <a routerLink="/admin/routes" routerLinkActive="active"><i class="fas fa-route"></i> Manage Routes</a>
+      <a routerLink="/admin/schedules" routerLinkActive="active"><i class="fas fa-calendar-alt"></i> Schedules</a>
+      <a routerLink="/admin/bookings" routerLinkActive="active"><i class="fas fa-ticket-alt"></i> All Bookings</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <div class="avatar">A</div>
+        <div><div class="name">{{ user?.fullName }}</div><div class="role">Administrator</div></div>
+      </div>
+      <button (click)="logout()"><i class="fas fa-sign-out-alt me-2"></i>Logout</button>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <div class="page-header">
+      <h2><i class="fas fa-tachometer-alt me-2"></i>Admin Dashboard</h2>
+      <p>Overview of SwiftBus operations</p>
+    </div>
+
+    <div *ngIf="loading" class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>Loading stats...</p></div>
+
+    <ng-container *ngIf="!loading && stats">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon blue"><i class="fas fa-users"></i></div>
+          <div class="stat-info"><div class="value">{{ stats.totalUsers }}</div><div class="label">Total Users</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon orange"><i class="fas fa-ticket-alt"></i></div>
+          <div class="stat-info"><div class="value">{{ stats.totalBookings }}</div><div class="label">Total Bookings</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon green"><i class="fas fa-check-circle"></i></div>
+          <div class="stat-info"><div class="value">{{ stats.confirmedBookings }}</div><div class="label">Confirmed</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon red"><i class="fas fa-times-circle"></i></div>
+          <div class="stat-info"><div class="value">{{ stats.cancelledBookings }}</div><div class="label">Cancelled</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon purple"><i class="fas fa-rupee-sign"></i></div>
+          <div class="stat-info"><div class="value">₹{{ stats.totalRevenue }}</div><div class="label">Total Revenue</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon teal"><i class="fas fa-bus"></i></div>
+          <div class="stat-info"><div class="value">{{ stats.totalBuses }}</div><div class="label">Active Buses</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon blue"><i class="fas fa-route"></i></div>
+          <div class="stat-info"><div class="value">{{ stats.totalRoutes }}</div><div class="label">Active Routes</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon orange"><i class="fas fa-calendar-alt"></i></div>
+          <div class="stat-info"><div class="value">{{ stats.totalSchedules }}</div><div class="label">Schedules</div></div>
+        </div>
+      </div>
+
+      <!-- Recent Bookings -->
+      <div class="data-card">
+        <div class="card-header">
+          <h3><i class="fas fa-history me-2"></i>Recent Bookings</h3>
+          <a routerLink="/admin/bookings" class="btn btn-outline btn-sm">View All</a>
+        </div>
+        <div class="card-body">
+          <div *ngIf="stats.recentBookings.length === 0" class="empty-state">
+            <i class="fas fa-ticket-alt"></i><p>No bookings yet.</p>
+          </div>
+          <div class="table-responsive" *ngIf="stats.recentBookings.length > 0">
+            <table>
+              <thead>
+                <tr><th>PNR</th><th>User</th><th>Route</th><th>Amount</th><th>Date</th><th>Status</th></tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let b of stats.recentBookings">
+                  <td><strong>{{ b.pnrNumber }}</strong></td>
+                  <td>{{ b.userName }}</td>
+                  <td>{{ b.origin }} → {{ b.destination }}</td>
+                  <td><strong>₹{{ b.totalAmount }}</strong></td>
+                  <td>{{ b.bookingDate | date:'dd MMM yyyy' }}</td>
+                  <td><span class="badge" [class]="b.bookingStatus.toLowerCase()">{{ b.bookingStatus }}</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </main>
+</div>

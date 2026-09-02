@@ -1,0 +1,59 @@
+<div class="auth-wrapper">
+  <div class="auth-overlay"></div>
+  <div class="auth-card">
+    <div class="brand">
+      <i class="fas fa-bus-alt"></i>
+      <h1>SwiftBus</h1>
+      <p>Book your journey today</p>
+    </div>
+
+    <h2>Create Account</h2>
+
+    <div class="alert alert-danger" *ngIf="error">
+      <i class="fas fa-exclamation-circle me-2"></i>{{ error }}
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="form-group">
+        <label><i class="fas fa-user"></i> Full Name</label>
+        <input type="text" formControlName="fullName" placeholder="Enter your full name"
+          [class.is-invalid]="form.get('fullName')?.invalid && form.get('fullName')?.touched" />
+        <div class="invalid-feedback" *ngIf="form.get('fullName')?.invalid && form.get('fullName')?.touched">Full name is required.</div>
+      </div>
+
+      <div class="form-group">
+        <label><i class="fas fa-envelope"></i> Email</label>
+        <input type="email" formControlName="email" placeholder="Enter your email"
+          [class.is-invalid]="form.get('email')?.invalid && form.get('email')?.touched" />
+        <div class="invalid-feedback" *ngIf="form.get('email')?.invalid && form.get('email')?.touched">Valid email is required.</div>
+      </div>
+
+      <div class="form-group">
+        <label><i class="fas fa-phone"></i> Phone Number</label>
+        <input type="text" formControlName="phoneNumber" placeholder="10-digit phone number"
+          [class.is-invalid]="form.get('phoneNumber')?.invalid && form.get('phoneNumber')?.touched" />
+        <div class="invalid-feedback" *ngIf="form.get('phoneNumber')?.invalid && form.get('phoneNumber')?.touched">Valid 10-digit phone required.</div>
+      </div>
+
+      <div class="form-group">
+        <label><i class="fas fa-lock"></i> Password</label>
+        <div class="input-icon-right">
+          <input [type]="showPassword ? 'text' : 'password'" formControlName="password" placeholder="Min 6 characters"
+            [class.is-invalid]="form.get('password')?.invalid && form.get('password')?.touched" />
+          <i class="fas" [class.fa-eye]="!showPassword" [class.fa-eye-slash]="showPassword"
+            (click)="showPassword = !showPassword"></i>
+        </div>
+        <div class="invalid-feedback" *ngIf="form.get('password')?.invalid && form.get('password')?.touched">Password must be at least 6 characters.</div>
+      </div>
+
+      <button type="submit" class="btn-primary-full" [disabled]="loading">
+        <span *ngIf="!loading"><i class="fas fa-user-plus me-2"></i>Register</span>
+        <span *ngIf="loading"><i class="fas fa-spinner fa-spin me-2"></i>Registering...</span>
+      </button>
+    </form>
+
+    <p class="auth-footer">
+      Already have an account? <a routerLink="/login">Login here</a>
+    </p>
+  </div>
+</div>
